@@ -4,6 +4,7 @@
         <title>BoltDB-Web</title>
         <link rel="stylesheet" href="/web/css/uikit.min.css" />
         <link rel="stylesheet" href="/web/css/uikit.almost-flat.min.css" />
+        <link rel="stylesheet" href="/web/css/style.css" />
         <script src="/web/js//jquery-2.2.3.min.js"></script>
         <script src="/web/js/uikit.min.js"></script>
         <script src="/web/js/navigo.min.js"></script>
@@ -32,65 +33,100 @@
             </nav>
         </div>
 
-        <!-- Form Page -->
-        <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg1">
-            <div class="uk-vertical-align-middle" style="width: 600px;" id="dfata">
-                <form class="uk-panel uk-panel-box uk-form">
-                    <div class="uk-form-row">
-                        <input class="uk-width-1-1 uk-form-large" type="text" id="bucket" placeholder="Bucket name">
-                    </div>
-                    <div class="uk-form-row">
-                        <input class="uk-width-1-1 uk-form-large" type="text" id="key" placeholder="Key">
-                    </div>
-                    <div class="uk-form-row">
-                        <textarea class="uk-width-1-1 uk-form-large" type="text" id="value" placeholder="value"></textarea>
-                    </div>
-                    <div class="uk-form-row">
-                        <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="get()">Get</a>
-                    </div>
-                    <div class="uk-form-row">
-                        <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="put()">Put</a>
-                    </div>
-                    <div class="uk-form-row">
-                        <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="deleteKey()">Delete key</a>
-                    </div>
-                    <div class="uk-form-row">
-                        <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="deleteBucket()">Delete Bucket</a>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Bucket Page -->
-        <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg2">
-            <div class="uk-vertical-align-middle" style="width: 250px;text-align:left" id="data"></div>
-        </div>
-
-        <!-- Prefix Scan Page -->
-        <div class="uk-vertical-align uk-text-center" id="pg3">
-            <div class="uk-vertical-align-middle uk-grid" style="width: 600px;text-align:left" id="d">
-                <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pbucket" placeholder="Bucket name"></div>
-                <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pkey" placeholder="Key Prefix"></div>
-                <div class="uk-width-1-3"><a class="uk-width-1-1 uk-button uk-button-primary uk-button-large" onclick="prefixScan()">List</a></div>
+        <div class="uk-container uk-container-center">
+            <!-- Form Page -->
+            <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg1">
+                <div class="uk-vertical-align-middle" style="width: 600px;" id="dfata">
+                    <form class="uk-panel uk-panel-box uk-form">
+                        <div class="uk-form-row">
+                            <input class="uk-width-1-1 uk-form-large" type="text" id="bucket" placeholder="Bucket name">
+                        </div>
+                        <div class="uk-form-row">
+                            <input class="uk-width-1-1 uk-form-large" type="text" id="key" placeholder="Key">
+                        </div>
+                        <div class="uk-form-row">
+                            <textarea class="uk-width-1-1 uk-form-large" type="text" id="value" placeholder="value"></textarea>
+                        </div>
+                        <div class="uk-form-row">
+                            <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="get()">Get</a>
+                        </div>
+                        <div class="uk-form-row">
+                            <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="put()">Put</a>
+                        </div>
+                        <div class="uk-form-row">
+                            <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="deleteKey()">Delete key</a>
+                        </div>
+                        <div class="uk-form-row">
+                            <a class="uk-width-1-1 uk-button uk-button-primary uk-button-small" onclick="deleteBucket()">Delete Bucket</a>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <br/><br/>
-            <div class="uk-vertical-align-middle" style="width: 500px;text-align:left"id="pfs"></div>
-        </div>
-
-        <br>
-        <br>
-
-        <!-- Log -->
-        <div class="uk-vertical-align uk-text-center uk-height-1-1">
-            <div class="uk-vertical-align-middle" style="height:400px;width:500px; background:#f3f3f3;overflow: scroll; text-align:left" id="log">
-                Log: <br/>
-                [0999] Made in Dublin with lots of &#10084; by <a href="https://ie.linkedin.com/in/avinashdsilva" target="_blank">Avi</a>
+            <!-- Bucket Page -->
+            <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg2">
+                <div class="uk-vertical-align-middle" style="width: 250px;text-align:left" id="data"></div>
             </div>
-        </div>
 
-        <br/>
-        <br/>
+            <!-- Prefix Scan Page -->
+            <div class="uk-vertical-align uk-text-center" id="pg3">
+                <div class="uk-vertical-align-middle uk-grid" style="width: 600px;text-align:left" id="d">
+                    <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pbucket" placeholder="Bucket name"></div>
+                    <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pkey" placeholder="Key Prefix"></div>
+                    <div class="uk-width-1-3"><a class="uk-width-1-1 uk-button uk-button-primary uk-button-large" onclick="prefixScan()">List</a></div>
+                </div>
+
+                <br/><br/>
+                <div class="uk-vertical-align-middle" style="width: 500px;text-align:left"id="pfs"></div>
+            </div>
+
+            <!-- Explore Page -->
+            <div class="uk-height-1-1" id="pg4">
+                <input type="hidden" id="ebucket">
+                <div id="bdc">
+                    <ul class="breadcrumbs">
+                        <li><a onclick="">Bucket</a></li>
+                        <li><a onclick="">Sub-Bucket</a></li>
+                    </ul>
+                </div>
+
+                <div id="expl">
+                    <table class="uk-table">
+                        <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>Value</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td> {{@key}} </td>
+                            <td> {{this}}</td>
+                            <td> <a onclick="doEdit('{{@key}}')">[Edit]</a> </td>
+                            <td> <a onclick="doDelete('{{@key}}')">[x]</a> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br>
+            <br>
+
+            <!-- Log -->
+            <div class="uk-vertical-align uk-text-center uk-height-1-1">
+                <div class="uk-vertical-align-middle" style="height:400px;width:500px; background:#f3f3f3;overflow: scroll; text-align:left" id="log">
+                    Log: <br/>
+                    [0999] Made in Dublin with lots of &#10084; by <a href="https://ie.linkedin.com/in/avinashdsilva" target="_blank">Avi</a>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+        </div>
 
     </body>
 
@@ -113,7 +149,7 @@
     </script>
 
 
-    <script id="exploretpl" type="x-tmpl-mustache">
+    <script id="prefixtpl" type="x-tmpl-mustache">
         <table class="uk-table">
             <thead>
                 <tr>
@@ -135,6 +171,43 @@
            {{/each}}
             </tbody>
         </table>
+    </script>
+
+    <script id="exploretpl" type="x-tmpl-mustache">
+        <table class="uk-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {{#each list}}
+                <tr>
+                    {{#Bucket}}
+                        <td><a onclick"">{{@key}}</a></td>
+                    {{/Bucket}}
+                    {{^Bucket}}
+                        <td>{{@key}}</td>
+                    {{/Bucket}}
+                    <td> {{value}}</td>
+                    <td> <a onclick="doEdit('{{@key}}')">[Edit]</a> </td>
+                    <td> <a onclick="doDelete('{{@key}}')">[x]</a> </td>
+                </tr>
+           {{/each}}
+            </tbody>
+        </table>
+    </script>
+
+    <script id="breadcrumbtpl" type="x-tmpl-mustache">
+        <ul class="breadcrumbs">
+            {{#each buckets}}
+                <li><a onclick="">{{this}}</a></li>
+            {{/each}}
+        </ul>
     </script>
 
 </html>

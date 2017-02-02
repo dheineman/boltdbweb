@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 var Db *bolt.DB
@@ -252,4 +253,64 @@ func Buckets(c *gin.Context) {
 
 	c.JSON(200, res)
 
+}
+
+type Node struct {
+	Key      string
+	Value    string
+	Bucket bool
+}
+type Nodes struct {
+	Result  string
+	Buckets []string
+	N       map[string]Node
+}
+
+func Explore(c *gin.Context) {
+	res := Nodes{Result: "nok"}
+	res.N = make(map[string]Node)
+
+	v := c.PostForm("bucket")
+	bs := strings.Split(v, "/")
+
+	res.Buckets = bs;
+
+	cb, bs := bs[0], bs[1:]
+	Db.View(func(tx *bolt.Tx) (err error) {
+		b := tx.Bucket([]byte(cb))
+		if b != nil {
+			if len(bs) > 0 {
+				b = recursiveGetBucket(b, bs)
+			}
+			c := b.Cursor()
+			for k, v := c.First(); k != nil; k, v = c.Next() {
+				value := string(v)
+				bucket := bool(false)
+				if v == nil {
+					bucket = true
+				}
+				res.N[string(k)] = Node{
+					Key: string(k),
+					Value: value,
+					Bucket: bucket,
+				}
+			}
+			res.Result = "ok"
+		} else {
+			res.Result = "Root bucket not found"
+		}
+		return
+	})
+	c.JSON(200, res)
+}
+func recursiveGetBucket(bu *bolt.Bucket, bs []string) (b *bolt.Bucket) {
+	b = bu
+	if len(bs) > 0 {
+		cb, bs := bs[0], bs[1:]
+		b = bu.Bucket([]byte(cb))
+		if b != nil && len(bs) > 0 {
+			b = recursiveGetBucket(b ,bs)
+		}
+	}
+	return
 }

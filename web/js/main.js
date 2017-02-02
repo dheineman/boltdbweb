@@ -14,6 +14,12 @@ router.on('/prefixScan', function () {
     $('#pg3').show();
 });
 
+router.on('/explore', function () {
+    $('#pg1').hide();
+    $('#pg2').hide();
+    $('#pg3').hide();
+});
+
 router.on('/', function () {
     $('#pg2').hide();
     $('#pg3').hide();
@@ -101,7 +107,7 @@ function put(){
 
 function prefixScan() {
     $('#pfs').html("")
-    var source = $('#exploretpl').html();
+    var source = $('#prefixtpl').html();
     var template = Handlebars.compile(source);
 
     $.post("/prefixScan",{bucket:$('#pbucket').val(),key:$('#pkey').val()},function(data){
@@ -110,6 +116,27 @@ function prefixScan() {
         var html    = template({list: data.M});
         $('#pfs').html(html)
     });
+}
+
+function explore() {
+    $('#expl').html("");
+    $('#bdc').html("");
+
+     var source = $('#exploretpl').html();
+     var template = Handlebars.compile(source);
+
+     source = $('#breadcrumbtpl').html();
+     breadcrumb = Handlebars.compile(source);
+
+     $.post("/explore",{bucket:$('#ebucket').val()},function(data){
+         log(data)
+         //var rendered = Mustache.render(template, {list: data.M});
+         var html    = template({list: data.N});
+         $('#expl').html(html)
+
+         html = breadcrumb({buckets: data.Buckets})
+         $('#bdc').html(html)
+     });
 }
 
 function loadBucketTable() {
