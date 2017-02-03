@@ -3,39 +3,24 @@ var router = new Navigo();
 
 router.on('/buckets', function () {
     loadBucketTable();
-    $('#pg1').hide();
-    $('#pg3').hide();
-    $('#pg4').hide();
-    $('#pg2').show();
+    $('.page').hide();
+    $('#page-buckets').show();
 });
 
 router.on('/prefixScan', function () {
-    $('#pg1').hide();
-    $('#pg2').hide();
-    $('#pg4').hide();
-    $('#pg3').show();
+    $('.page').hide();
+    $('#page-prefix').show();
 });
 
 router.on('/explore', function () {
-    $('#pg1').hide();
-    $('#pg2').hide();
-    $('#pg3').hide();
-    $('#pg4').show();
+    $('.page').hide();
+    $('#page-explore').show();
 });
 
-router.on('/', function () {
-    $('#pg2').hide();
-    $('#pg3').hide();
-    $('#pg4').hide();
-    $('#pg1').show();
-});
-
+// Default route
 router.on(function() {
-    $('#pg2').hide();
-    $('#pg3').hide();
-    $('#pg4').hide();
-
-    console.log("default route:no other routes matched.")
+    $('.page').hide();
+    $('#page-form').show();
 });
 
 function doDelete(key){

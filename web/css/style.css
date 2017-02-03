@@ -16,3 +16,11 @@
     content: "";
     margin-left: 0;
 }
+
+.log {
+    height: 400px;
+    width: 100%;
+    background: #f3f3f3;
+    overflow: scroll;
+    text-align: left
+}

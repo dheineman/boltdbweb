@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
         <title>BoltDB-Web</title>
+
         <link rel="stylesheet" href="/web/css/uikit.min.css" />
         <link rel="stylesheet" href="/web/css/uikit.almost-flat.min.css" />
         <link rel="stylesheet" href="/web/css/style.css" />
+
         <script src="/web/js//jquery-2.2.3.min.js"></script>
         <script src="/web/js/uikit.min.js"></script>
         <script src="/web/js/navigo.min.js"></script>
@@ -35,7 +39,7 @@
 
         <div class="uk-container uk-container-center">
             <!-- Form Page -->
-            <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg1">
+            <div class="uk-vertical-align uk-text-center uk-height-1-1 page" id="page-form">
                 <div class="uk-vertical-align-middle" style="width: 600px;" id="dfata">
                     <form class="uk-panel uk-panel-box uk-form">
                         <div class="uk-form-row">
@@ -64,15 +68,15 @@
             </div>
 
             <!-- Bucket Page -->
-            <div class="uk-height-1-1" id="pg2">
+            <div class="uk-height-1-1 page" id="page-buckets">
                 <ul class="breadcrumbs">
-                    <li><a href="#/buckets">Buckets</a></li>
+                    <li>Buckets</li>
                 </ul>
                 <div id="data"></div>
             </div>
 
             <!-- Prefix Scan Page -->
-            <div class="uk-vertical-align uk-text-center" id="pg3">
+            <div class="uk-vertical-align uk-text-center page" id="page-prefix">
                 <div class="uk-vertical-align-middle uk-grid" style="width: 600px;text-align:left" id="d">
                     <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pbucket" placeholder="Bucket name"></div>
                     <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pkey" placeholder="Key Prefix"></div>
@@ -84,7 +88,7 @@
             </div>
 
             <!-- Explore Page -->
-            <div class="uk-height-1-1" id="pg4">
+            <div class="uk-height-1-1 page" id="page-explore">
                 <input type="hidden" id="ebucket">
                 <div id="bdc"></div>
 
@@ -96,7 +100,7 @@
 
             <!-- Log -->
             <div class="uk-height-1-1">
-                <div class="uk-vertical-align-middle" style="height:400px;width:100%; background:#f3f3f3;overflow: scroll; text-align:left" id="log">
+                <div class="uk-vertical-align-middle log" id="log">
                     Log: <br/>
                     [0999] Made in Dublin with lots of &#10084; by <a href="https://ie.linkedin.com/in/avinashdsilva" target="_blank">Avi</a>
                 </div>
