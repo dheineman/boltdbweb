@@ -15,7 +15,7 @@
 
         <!-- Header -->
         <div class="uk-container uk-container-center uk-margin-top uk-margin-small-bottom">
-            <nav class="uk-navbar uk-margin-large-bottom">
+            <nav class="uk-navbar uk-margin-bottom">
                 <a class="uk-navbar-brand uk-hidden-small" href="/">BoltDB-Web</a>
                 <ul class="uk-navbar-nav uk-hidden-small">
                     <li>
@@ -64,8 +64,11 @@
             </div>
 
             <!-- Bucket Page -->
-            <div class="uk-vertical-align uk-text-center uk-height-1-1" id="pg2">
-                <div class="uk-vertical-align-middle" style="width: 250px;text-align:left" id="data"></div>
+            <div class="uk-height-1-1" id="pg2">
+                <ul class="breadcrumbs">
+                    <li><a href="#/buckets">Buckets</a></li>
+                </ul>
+                <div id="data"></div>
             </div>
 
             <!-- Prefix Scan Page -->
@@ -83,12 +86,7 @@
             <!-- Explore Page -->
             <div class="uk-height-1-1" id="pg4">
                 <input type="hidden" id="ebucket">
-                <div id="bdc">
-                    <ul class="breadcrumbs">
-                        <li><a onclick="">Bucket</a></li>
-                        <li><a onclick="">Sub-Bucket</a></li>
-                    </ul>
-                </div>
+                <div id="bdc"></div>
 
                 <div id="expl"></div>
             </div>
@@ -97,8 +95,8 @@
             <br>
 
             <!-- Log -->
-            <div class="uk-vertical-align uk-text-center uk-height-1-1">
-                <div class="uk-vertical-align-middle" style="height:400px;width:500px; background:#f3f3f3;overflow: scroll; text-align:left" id="log">
+            <div class="uk-height-1-1">
+                <div class="uk-vertical-align-middle" style="height:400px;width:100%; background:#f3f3f3;overflow: scroll; text-align:left" id="log">
                     Log: <br/>
                     [0999] Made in Dublin with lots of &#10084; by <a href="https://ie.linkedin.com/in/avinashdsilva" target="_blank">Avi</a>
                 </div>
@@ -114,7 +112,7 @@
         <table class="uk-table">
             <thead>
                 <tr>
-                    <th>Bucket Names</th>
+                    <th>Bucket</th>
                 </tr>
             </thead>
 
@@ -184,6 +182,7 @@
 
     <script id="breadcrumbtpl" type="x-tmpl-mustache">
         <ul class="breadcrumbs">
+            <li><a href="#/buckets">Buckets</a></li>
             {{#each buckets}}
                 <li><a onclick="doExplore('{{this}}')">{{@key}}</a></li>
             {{/each}}
