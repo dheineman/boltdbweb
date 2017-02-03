@@ -5,12 +5,14 @@ router.on('/buckets', function () {
     loadBucketTable();
     $('#pg1').hide();
     $('#pg3').hide();
+    $('#pg4').hide();
     $('#pg2').show();
 });
 
 router.on('/prefixScan', function () {
     $('#pg1').hide();
     $('#pg2').hide();
+    $('#pg4').hide();
     $('#pg3').show();
 });
 
@@ -18,17 +20,20 @@ router.on('/explore', function () {
     $('#pg1').hide();
     $('#pg2').hide();
     $('#pg3').hide();
+    $('#pg4').show();
 });
 
 router.on('/', function () {
     $('#pg2').hide();
     $('#pg3').hide();
+    $('#pg4').hide();
     $('#pg1').show();
 });
 
 router.on(function() {
     $('#pg2').hide();
     $('#pg3').hide();
+    $('#pg4').hide();
 
     console.log("default route:no other routes matched.")
 });
@@ -59,6 +64,14 @@ function doPrefixScan(bucket){
     prefixScan()
 
     router.navigate('#/prefixScan');
+}
+
+function doExplore(bucket) {
+    $('#ebucket').val(bucket);
+
+    explore();
+
+    router.navigate('#/explore');
 }
 
 function log(text){
@@ -130,12 +143,20 @@ function explore() {
 
      $.post("/explore",{bucket:$('#ebucket').val()},function(data){
          log(data)
-         //var rendered = Mustache.render(template, {list: data.M});
-         var html    = template({list: data.N});
+
+         // Render the bucket data
+         var html = template({list: data.N});
          $('#expl').html(html)
 
-         html = breadcrumb({buckets: data.Buckets})
-         $('#bdc').html(html)
+        // Render the breadcrumbs
+        var buckets = {}, parents = [];
+        data.Buckets.forEach(function(bucket) {
+            parents.push(bucket)
+            buckets[bucket] = parents.join('/');
+        })
+
+        html = breadcrumb({buckets: buckets})
+        $('#bdc').html(html)
      });
 }
 

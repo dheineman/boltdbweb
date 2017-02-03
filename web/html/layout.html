@@ -90,27 +90,7 @@
                     </ul>
                 </div>
 
-                <div id="expl">
-                    <table class="uk-table">
-                        <thead>
-                        <tr>
-                            <th>Key</th>
-                            <th>Value</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <tr>
-                            <td> {{@key}} </td>
-                            <td> {{this}}</td>
-                            <td> <a onclick="doEdit('{{@key}}')">[Edit]</a> </td>
-                            <td> <a onclick="doDelete('{{@key}}')">[x]</a> </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div id="expl"></div>
             </div>
 
             <br>
@@ -141,7 +121,7 @@
             <tbody>
             {{#list}}
                 <tr>
-                    <td> <a onclick="doPrefixScan('{{.}}')">{{.}}</a> </td>
+                    <td> <a onclick="doExplore('{{.}}')">{{.}}</a> </td>
                 </tr>
             {{/list}}
             </tbody>
@@ -188,14 +168,14 @@
             {{#each list}}
                 <tr>
                     {{#Bucket}}
-                        <td><a onclick"">{{@key}}</a></td>
+                        <td><a onclick="doExplore('{{@key}}')">{{this.Key}}</a></td>
                     {{/Bucket}}
                     {{^Bucket}}
-                        <td>{{@key}}</td>
+                        <td>{{this.Key}}</td>
                     {{/Bucket}}
-                    <td> {{value}}</td>
-                    <td> <a onclick="doEdit('{{@key}}')">[Edit]</a> </td>
-                    <td> <a onclick="doDelete('{{@key}}')">[x]</a> </td>
+                    <td> {{this.Value}}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
            {{/each}}
             </tbody>
@@ -205,7 +185,7 @@
     <script id="breadcrumbtpl" type="x-tmpl-mustache">
         <ul class="breadcrumbs">
             {{#each buckets}}
-                <li><a onclick="">{{this}}</a></li>
+                <li><a onclick="doExplore('{{this}}')">{{@key}}</a></li>
             {{/each}}
         </ul>
     </script>

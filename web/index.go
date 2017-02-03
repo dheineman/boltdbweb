@@ -275,21 +275,23 @@ func Explore(c *gin.Context) {
 
 	res.Buckets = bs;
 
-	cb, bs := bs[0], bs[1:]
+	cb, rb := bs[0], bs[1:]
 	Db.View(func(tx *bolt.Tx) (err error) {
 		b := tx.Bucket([]byte(cb))
 		if b != nil {
-			if len(bs) > 0 {
-				b = recursiveGetBucket(b, bs)
+			if len(rb) > 0 {
+				b = recursiveGetBucket(b, rb)
 			}
 			c := b.Cursor()
 			for k, v := c.First(); k != nil; k, v = c.Next() {
+				key := string(k)
 				value := string(v)
 				bucket := bool(false)
 				if v == nil {
+					key = strings.Join(append(bs, key), "/")
 					bucket = true
 				}
-				res.N[string(k)] = Node{
+				res.N[key] = Node{
 					Key: string(k),
 					Value: value,
 					Bucket: bucket,
