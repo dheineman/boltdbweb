@@ -129,19 +129,21 @@ function explore() {
      $.post("/explore",{bucket:$('#ebucket').val()},function(data){
          log(data)
 
-         // Render the bucket data
-         var html = template({list: data.N});
-         $('#expl').html(html)
-
         // Render the breadcrumbs
         var buckets = {}, parents = [];
         data.Buckets.forEach(function(bucket) {
             parents.push(bucket)
+            path = parents.join('/')
             buckets[bucket] = parents.join('/');
         })
 
         html = breadcrumb({buckets: buckets})
         $('#bdc').html(html)
+
+        // Render the bucket data
+        var html = template({list: data.N, path: path});
+        $('#expl').html(html)
+
      });
 }
 

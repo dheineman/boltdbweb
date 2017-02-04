@@ -170,12 +170,12 @@
             {{#each list}}
                 <tr>
                     {{#Bucket}}
-                        <td><a onclick="doExplore('{{@key}}')">{{this.Key}}</a></td>
+                        <td><a onclick="doExplore('{{../path}}/{{@key}}')">{{Key}}</a></td>
                     {{/Bucket}}
                     {{^Bucket}}
-                        <td>{{this.Key}}</td>
+                        <td>{{Key}}</td>
                     {{/Bucket}}
-                    <td> {{this.Value}}</td>
+                    <td>{{Value}}</td>
                     <td></td>
                     <td></td>
                 </tr>
