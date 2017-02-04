@@ -120,21 +120,21 @@ function explore() {
     $('#expl').html("");
     $('#bdc').html("");
 
-     var source = $('#exploretpl').html();
-     var template = Handlebars.compile(source);
+    var source = $('#exploretpl').html();
+    var template = Handlebars.compile(source);
 
-     source = $('#breadcrumbtpl').html();
-     breadcrumb = Handlebars.compile(source);
+    source = $('#breadcrumbtpl').html();
+    breadcrumb = Handlebars.compile(source);
 
-     $.post("/explore",{bucket:$('#eBucket').val(), key:$('#ePrefix').val()},function(data){
-         log(data)
+    $.post("/explore",{bucket:$('#eBucket').val(), key:$('#ePrefix').val()},function(data){
+        log(data)
 
         // Render the breadcrumbs
         var buckets = {}, parents = [];
         data.Buckets.forEach(function(bucket) {
             parents.push(bucket)
             path = parents.join('/')
-            buckets[bucket] = parents.join('/');
+            buckets[path] = bucket;
         })
 
         html = breadcrumb({buckets: buckets})
@@ -144,7 +144,7 @@ function explore() {
         var html = template({list: data.N, path: path});
         $('#expl').html(html)
 
-     });
+    });
 }
 
 function loadBucketTable() {
