@@ -6,6 +6,7 @@ import (
 	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
 	"strings"
+	"github.com/pkg/errors"
 )
 
 var Db *bolt.DB
@@ -196,8 +197,8 @@ func Explore(c *gin.Context) {
 		return
 	}
 
-	if c.PostForm("prefix") != "" {
-		prefix = []byte(c.PostForm("prefix"))
+	if c.PostForm("key") != "" {
+		prefix = []byte(c.PostForm("key"))
 	}
 
 	// Get a list of buckets
@@ -206,26 +207,9 @@ func Explore(c *gin.Context) {
 	res.Buckets = bs
 
 	Db.View(func(tx *bolt.Tx) (err error) {
-		// Get the first bucket
-		nb, bs := bs[0], bs[1:]
-		b := tx.Bucket([]byte(nb))
-		if b == nil {
+		b, err := getBucket(tx, bs)
+		if err != nil {
 			res.Result = "Bucket not found"
-			return
-		}
-
-		// Keep walking buckets
-		for len(bs) > 0 {
-			var nb string
-			nb, bs = bs[0], bs[1:]
-
-			cb := b.Bucket([]byte(nb))
-			if cb == nil {
-				res.Result = "Bucket not found"
-				return
-			}
-
-			b = cb
 		}
 
 		c := b.Cursor()
@@ -266,4 +250,31 @@ func Explore(c *gin.Context) {
 
 	c.JSON(200, res)
 
+}
+
+// getBucket - Traverse trough the given buckets to deepest one
+func getBucket(tx *bolt.Tx, bs []string) (b *bolt.Bucket, err error) {
+	// Get the first bucket
+	nb, bs := bs[0], bs[1:]
+	b = tx.Bucket([]byte(nb))
+	if b == nil {
+		err = errors.New("Bucket not found")
+		return
+	}
+
+	// Keep walking buckets
+	for len(bs) > 0 {
+		var nb string
+		nb, bs = bs[0], bs[1:]
+
+		cb := b.Bucket([]byte(nb))
+		if cb == nil {
+			err = errors.New("Bucket not found")
+			return
+		}
+
+		b = cb
+	}
+
+	return
 }

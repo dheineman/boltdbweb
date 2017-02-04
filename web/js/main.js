@@ -126,7 +126,7 @@ function explore() {
      source = $('#breadcrumbtpl').html();
      breadcrumb = Handlebars.compile(source);
 
-     $.post("/explore",{bucket:$('#eBucket').val(), prefix:$('#ePrefix').val()},function(data){
+     $.post("/explore",{bucket:$('#eBucket').val(), key:$('#ePrefix').val()},function(data){
          log(data)
 
         // Render the breadcrumbs
