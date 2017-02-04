@@ -152,90 +152,6 @@ func Get(c *gin.Context) {
 
 }
 
-type Result struct {
-	Result string
-	M      map[string]string
-}
-
-func PrefixScan(c *gin.Context) {
-
-	res := Result{Result: "nok"}
-
-	res.M = make(map[string]string)
-
-	if c.PostForm("bucket") == "" {
-
-		res.Result = "no bucket name | n"
-		c.JSON(200, res)
-	}
-
-	count := 0
-
-	if c.PostForm("key") == "" {
-
-		Db.View(func(tx *bolt.Tx) error {
-			// Assume bucket exists and has keys
-			b := tx.Bucket([]byte(c.PostForm("bucket")))
-
-			if b != nil {
-
-				c := b.Cursor()
-
-				for k, v := c.First(); k != nil; k, v = c.Next() {
-					res.M[string(k)] = string(v)
-
-					if count > 2000 {
-						break
-					}
-					count++
-				}
-
-				res.Result = "ok"
-
-			} else {
-
-				res.Result = "no such bucket available | n"
-
-			}
-
-			return nil
-		})
-
-	} else {
-
-		Db.View(func(tx *bolt.Tx) error {
-			// Assume bucket exists and has keys
-			b := tx.Bucket([]byte(c.PostForm("bucket"))).Cursor()
-
-			if b != nil {
-
-				prefix := []byte(c.PostForm("key"))
-
-				for k, v := b.Seek(prefix); bytes.HasPrefix(k, prefix); k, v = b.Next() {
-					res.M[string(k)] = string(v)
-					if count > 2000 {
-						break
-					}
-					count++
-				}
-
-				res.Result = "ok"
-
-			} else {
-
-				res.Result = "no such bucket available | n"
-
-			}
-
-			return nil
-		})
-
-	}
-
-	c.JSON(200, res)
-
-}
-
 func Buckets(c *gin.Context) {
 
 	res := []string{}
@@ -255,64 +171,99 @@ func Buckets(c *gin.Context) {
 
 }
 
-type Node struct {
-	Key      string
-	Value    string
-	Bucket bool
-}
-type Nodes struct {
+type Result struct {
 	Result  string
 	Buckets []string
 	N       map[string]Node
 }
 
+type Node struct {
+	Key    string
+	Value  string
+	Bucket bool
+}
+
 func Explore(c *gin.Context) {
-	res := Nodes{Result: "nok"}
+
+	var prefix []byte
+
+	res := Result{Result: "nok"}
 	res.N = make(map[string]Node)
 
+	if c.PostForm("bucket") == "" {
+		res.Result = "No bucket provided"
+		c.JSON(200, res)
+		return
+	}
+
+	if c.PostForm("key") != "" {
+		prefix = []byte(c.PostForm("key"))
+	}
+
+	// Get a list of buckets
 	v := c.PostForm("bucket")
 	bs := strings.Split(v, "/")
+	res.Buckets = bs
 
-	res.Buckets = bs;
-
-	cb, rb := bs[0], bs[1:]
 	Db.View(func(tx *bolt.Tx) (err error) {
-		b := tx.Bucket([]byte(cb))
-		if b != nil {
-			if len(rb) > 0 {
-				b = recursiveGetBucket(b, rb)
+		// Get the first bucket
+		nb, bs := bs[0], bs[1:]
+		b := tx.Bucket([]byte(nb))
+		if b == nil {
+			res.Result = "Bucket not found"
+			return
+		}
+
+		// Keep walking buckets
+		for len(bs) > 0 {
+			var nb string
+			nb, bs = bs[0], bs[1:]
+
+			cb := b.Bucket([]byte(nb))
+			if cb == nil {
+				res.Result = "Bucket not found"
+				return
 			}
-			c := b.Cursor()
-			for k, v := c.First(); k != nil; k, v = c.Next() {
-				key := string(k)
-				value := string(v)
-				bucket := bool(false)
+
+			b = cb
+		}
+
+		c := b.Cursor()
+
+		if len(prefix) > 0  {
+			for k, v := c.Seek(prefix); bytes.HasPrefix(k, prefix); k, v = c.Next() {
+				bucket := false
 				if v == nil {
-					key = strings.Join(append(bs, key), "/")
 					bucket = true
 				}
-				res.N[key] = Node{
+
+				res.N[string(k)] = Node{
 					Key: string(k),
-					Value: value,
+					Value: string(v),
 					Bucket: bucket,
 				}
 			}
-			res.Result = "ok"
+
 		} else {
-			res.Result = "Root bucket not found"
+			for k, v := c.First(); k != nil; k, v = c.Next() {
+				bucket := false
+				if v == nil {
+					bucket = true
+				}
+
+				res.N[string(k)] = Node{
+					Key: string(k),
+					Value: string(v),
+					Bucket: bucket,
+				}
+			}
 		}
+
+		res.Result = "ok"
+
 		return
 	})
+
 	c.JSON(200, res)
-}
-func recursiveGetBucket(bu *bolt.Bucket, bs []string) (b *bolt.Bucket) {
-	b = bu
-	if len(bs) > 0 {
-		cb, bs := bs[0], bs[1:]
-		b = bu.Bucket([]byte(cb))
-		if b != nil && len(bs) > 0 {
-			b = recursiveGetBucket(b ,bs)
-		}
-	}
-	return
+
 }

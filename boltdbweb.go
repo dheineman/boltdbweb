@@ -114,7 +114,7 @@ func main() {
 	r.POST("/get", boltbrowserweb.Get)
 	r.POST("/deleteKey", boltbrowserweb.DeleteKey)
 	r.POST("/deleteBucket", boltbrowserweb.DeleteBucket)
-	r.POST("/prefixScan", boltbrowserweb.PrefixScan)
+	r.POST("/prefixScan", boltbrowserweb.Explore)
 	r.POST("/explore", boltbrowserweb.Explore)
 
 	r.Static("/web", staticPath+"/web")
