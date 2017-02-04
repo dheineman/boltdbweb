@@ -122,14 +122,20 @@ func Get(c *gin.Context) {
 	res := []string{"nok", ""}
 
 	if c.PostForm("bucket") == "" || c.PostForm("key") == "" {
-
 		res[1] = "no bucket name or key | n"
 		c.JSON(200, res)
 	}
 
-	Db.View(func(tx *bolt.Tx) error {
+	// Get a list of buckets
+	v := c.PostForm("bucket")
+	bs := strings.Split(v, "/")
 
-		b := tx.Bucket([]byte(c.PostForm("bucket")))
+	Db.View(func(tx *bolt.Tx) error {
+		b, err := getBucket(tx, bs)
+		if err != nil {
+			res[1] = "Bucket not found"
+			return fmt.Errorf(res[1])
+		}
 
 		if b != nil {
 
@@ -210,6 +216,7 @@ func Explore(c *gin.Context) {
 		b, err := getBucket(tx, bs)
 		if err != nil {
 			res.Result = "Bucket not found"
+			return fmt.Errorf(res.Result)
 		}
 
 		c := b.Cursor()
