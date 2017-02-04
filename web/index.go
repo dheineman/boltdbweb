@@ -287,8 +287,16 @@ func getBucket(tx *bolt.Tx, bs []string, create bool) (b *bolt.Bucket, err error
 	nb, bs := bs[0], bs[1:]
 	b = tx.Bucket([]byte(nb))
 	if b == nil {
-		err = errors.New("Bucket not found")
-		return
+		if create {
+			b, err = tx.CreateBucketIfNotExists([]byte(nb))
+			if err != nil {
+				err = errors.New("Could not create sub bucket")
+				return
+			}
+		} else {
+			err = errors.New("Bucket not found")
+			return
+		}
 	}
 
 	// Keep walking buckets
