@@ -41,16 +41,27 @@ func DeleteBucket(c *gin.Context) {
 		c.String(200, "no bucket name | n")
 	}
 
-	Db.Update(func(tx *bolt.Tx) error {
-		err := tx.DeleteBucket([]byte(c.PostForm("bucket")))
+	// Get a list of buckets
+	v := c.PostForm("bucket")
+	bs := strings.Split(v, "/")
 
+	// Pop of the last bucket
+	bucket, bs := bs[len(bs)-1], bs[:len(bs)-1]
+
+	Db.Update(func(tx *bolt.Tx) (err error) {
+		b, err := getBucket(tx, bs, false)
 		if err != nil {
-
-			c.String(200, "error no such bucket | n")
-			return fmt.Errorf("bucket: %s", err)
+			c.String(200, "Could not get bucket")
+			return fmt.Errorf("Could not get bucket [%s]: %v", v, err)
 		}
 
-		return nil
+		err = b.DeleteBucket([]byte(bucket))
+		if err != nil {
+			c.String(200, "Bucket not found")
+			return fmt.Errorf("Bucket not found [%s] %v", bucket, err)
+		}
+
+		return
 	})
 
 	c.String(200, "ok")
