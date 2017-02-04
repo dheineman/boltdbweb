@@ -22,13 +22,24 @@ router.on(function() {
     $('#page-form').show();
 });
 
-function doDelete(key){
+function doDeleteKey(key){
     var r = confirm("Delete?");
 
     if (r == true) {
-        b = $('#pbucket').val();
+        b = $('#eBucket').val();
         deleteKeyReq(b,key);
-        window.setTimeout(prefixScan, 1000);
+        window.setTimeout(explore, 1000);
+    }
+}
+
+function doDeleteBucket(key){
+    var r = confirm("Delete?");
+
+    if (r == true) {
+        b = $('#eBucket').val();
+        bucket = b + '/' + key
+        deleteBucketReq(bucket);
+        window.setTimeout(explore, 1000);
     }
 }
 
@@ -80,8 +91,12 @@ function getRequest(bucket,key){
     });
 }
 
-function deleteBucket(){
-    $.post("/deleteBucket",{bucket:$('#bucket').val()},function(data){
+function deleteBucket() {
+    deleteBucketReq($('#bucket').val());
+}
+
+function deleteBucketReq(bucket) {
+    $.post("/deleteBucket",{bucket:bucket},function(data){
         log(data)
     });
 }

@@ -185,7 +185,12 @@
                     {{/Bucket}}
                     <td>{{Value}}</td>
                     <td></td>
-                    <td></td>
+                    {{#Bucket}}
+                        <td> <a onclick="doDeleteBucket('{{@key}}')">[x]</a> </td>
+                    {{/Bucket}}
+                    {{^Bucket}}
+                        <td> <a onclick="doDeleteKey('{{@key}}')">[x]</a> </td>
+                    {{/Bucket}}
                 </tr>
            {{/each}}
             </tbody>
