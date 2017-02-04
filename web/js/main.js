@@ -19,7 +19,6 @@ router.on('/explore', function () {
 
 // Default route
 router.on(function() {
-    $('.page').hide();
     $('#page-form').show();
 });
 
@@ -51,8 +50,9 @@ function doPrefixScan(bucket){
     router.navigate('#/prefixScan');
 }
 
-function doExplore(bucket) {
-    $('#ebucket').val(bucket);
+function doExplore(bucket, prefix) {
+    $('#eBucket').val(bucket);
+    $('#ePrefix').val(prefix);
 
     explore();
 
@@ -126,7 +126,7 @@ function explore() {
      source = $('#breadcrumbtpl').html();
      breadcrumb = Handlebars.compile(source);
 
-     $.post("/explore",{bucket:$('#ebucket').val()},function(data){
+     $.post("/explore",{bucket:$('#eBucket').val(), prefix:$('#ePrefix').val()},function(data){
          log(data)
 
         // Render the breadcrumbs

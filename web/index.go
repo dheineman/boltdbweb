@@ -196,8 +196,8 @@ func Explore(c *gin.Context) {
 		return
 	}
 
-	if c.PostForm("key") != "" {
-		prefix = []byte(c.PostForm("key"))
+	if c.PostForm("prefix") != "" {
+		prefix = []byte(c.PostForm("prefix"))
 	}
 
 	// Get a list of buckets

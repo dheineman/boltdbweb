@@ -68,7 +68,7 @@
             </div>
 
             <!-- Bucket Page -->
-            <div class="uk-height-1-1 page" id="page-buckets">
+            <div class="uk-height-1-1 page" hidden id="page-buckets">
                 <ul class="breadcrumbs">
                     <li>Buckets</li>
                 </ul>
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Prefix Scan Page -->
-            <div class="uk-vertical-align uk-text-center page" id="page-prefix">
+            <div class="uk-vertical-align uk-text-center page" hidden id="page-prefix">
                 <div class="uk-vertical-align-middle uk-grid" style="width: 600px;text-align:left" id="d">
                     <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pbucket" placeholder="Bucket name"></div>
                     <div class="uk-width-1-3"><input class="uk-form-small" type="text" id="pkey" placeholder="Key Prefix"></div>
@@ -84,15 +84,23 @@
                 </div>
 
                 <br/><br/>
-                <div class="uk-vertical-align-middle" style="width: 500px;text-align:left"id="pfs"></div>
+                <div class="uk-vertical-align-middle" style="width: 500px;text-align:left"id="pfs2"></div>
             </div>
 
             <!-- Explore Page -->
-            <div class="uk-height-1-1 page" id="page-explore">
-                <input type="hidden" id="ebucket">
-                <div id="bdc"></div>
+            <div class="uk-height-1-1 page" hidden id="page-explore">
+                <input type="hidden" id="eBucket">
+                <div class="toolbar">
+                    <div class="breadcrumbs__container" id="bdc"></div>
+                    <div class="prefixscan__container" id="pfs">
+                        <input type="text" id="ePrefix">
+                        <a class="uk-button uk-button-primary uk-button-small" onclick="explore()">search</a>
+                    </div>
+                </div>
 
-                <div id="expl"></div>
+                <div id="expl">
+                    <div class="noresults">Nothing to explore</div>
+                </div>
             </div>
 
             <br>
