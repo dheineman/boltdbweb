@@ -49,16 +49,24 @@ func DeleteBucket(c *gin.Context) {
 	bucket, bs := bs[len(bs)-1], bs[:len(bs)-1]
 
 	Db.Update(func(tx *bolt.Tx) (err error) {
-		b, err := getBucket(tx, bs, false)
-		if err != nil {
-			c.String(200, "Could not get bucket")
-			return fmt.Errorf("Could not get bucket [%s]: %v", v, err)
-		}
+		if len(bs) > 0 {
+			b, err := getBucket(tx, bs, false)
+			if err != nil {
+				c.String(200, "Could not get bucket")
+				return fmt.Errorf("Could not get bucket [%s]: %v", v, err)
+			}
 
-		err = b.DeleteBucket([]byte(bucket))
-		if err != nil {
-			c.String(200, "Bucket not found")
-			return fmt.Errorf("Bucket not found [%s] %v", bucket, err)
+			err = b.DeleteBucket([]byte(bucket))
+			if err != nil {
+				c.String(200, "Could not delete bucket")
+				return fmt.Errorf("Could not delete bucket [%s] %v", bucket, err)
+			}
+		} else {
+			err = tx.DeleteBucket([]byte(bucket))
+			if err != nil {
+				c.String(200, "Could not delete bucket")
+				return fmt.Errorf("Could not delete bucket [%s] %v", bucket, err)
+			}
 		}
 
 		return
