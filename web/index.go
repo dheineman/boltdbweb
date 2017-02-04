@@ -74,19 +74,20 @@ func DeleteKey(c *gin.Context) {
 		c.String(200, "no bucket name or key | n")
 	}
 
-	Db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(c.PostForm("bucket")))
-		b = b
-		if err != nil {
+	// Get a list of buckets
+	v := c.PostForm("bucket")
+	bs := strings.Split(v, "/")
 
-			c.String(200, "error no such bucket | n")
-			return fmt.Errorf("bucket: %s", err)
+	Db.Update(func(tx *bolt.Tx) error {
+		b, err := getBucket(tx, bs, false)
+		if err != nil {
+			c.String(200, "Could not get bucket")
+			return fmt.Errorf("Could not get bucket [%s]: %v", v, err)
 		}
 
 		err = b.Delete([]byte(c.PostForm("key")))
 
 		if err != nil {
-
 			c.String(200, "error Deleting KV | n")
 			return fmt.Errorf("delete kv: %s", err)
 		}
