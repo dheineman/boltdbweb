@@ -177,20 +177,18 @@
             <tbody>
             {{#each list}}
                 <tr>
-                    {{#Bucket}}
+                    {{#if Bucket}}
                         <td><a onclick="doExplore('{{../path}}/{{@key}}')">{{Key}}</a></td>
-                    {{/Bucket}}
-                    {{^Bucket}}
+                    {{else}}
                         <td>{{Key}}</td>
-                    {{/Bucket}}
+                    {{/if}}
                     <td>{{Value}}</td>
                     <td></td>
-                    {{#Bucket}}
+                    {{#if Bucket}}
                         <td> <a onclick="doDeleteBucket('{{@key}}')">[x]</a> </td>
-                    {{/Bucket}}
-                    {{^Bucket}}
+                    {{else}}
                         <td> <a onclick="doDeleteKey('{{@key}}')">[x]</a> </td>
-                    {{/Bucket}}
+                    {{/if}}
                 </tr>
            {{/each}}
             </tbody>

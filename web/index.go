@@ -283,7 +283,7 @@ func Explore(c *gin.Context) {
 
 // getBucket - Traverse trough the given buckets to deepest one
 func getBucket(tx *bolt.Tx, bs []string, create bool) (b *bolt.Bucket, err error) {
-	// Get the first bucket
+	// Get or create the root bucket
 	nb, bs := bs[0], bs[1:]
 	b = tx.Bucket([]byte(nb))
 	if b == nil {
@@ -299,7 +299,7 @@ func getBucket(tx *bolt.Tx, bs []string, create bool) (b *bolt.Bucket, err error
 		}
 	}
 
-	// Keep walking buckets
+	// Keep walking until we reach the last bucket
 	for len(bs) > 0 {
 		var nb string
 		nb, bs = bs[0], bs[1:]
