@@ -93,13 +93,15 @@ func Put(c *gin.Context) {
 		c.String(200, "no bucket name or key | n")
 	}
 
-	Db.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists([]byte(c.PostForm("bucket")))
-		b = b
-		if err != nil {
+	// Get a list of buckets
+	v := c.PostForm("bucket")
+	bs := strings.Split(v, "/")
 
+	Db.Update(func(tx *bolt.Tx) error {
+		b, err := getBucket(tx, bs, true)
+		if err != nil {
 			c.String(200, "error  creating bucket | n")
-			return fmt.Errorf("create bucket: %s", err)
+			return fmt.Errorf("error creating bucket")
 		}
 
 		err = b.Put([]byte(c.PostForm("key")), []byte(c.PostForm("value")))
@@ -131,7 +133,7 @@ func Get(c *gin.Context) {
 	bs := strings.Split(v, "/")
 
 	Db.View(func(tx *bolt.Tx) error {
-		b, err := getBucket(tx, bs)
+		b, err := getBucket(tx, bs, false)
 		if err != nil {
 			res[1] = "Bucket not found"
 			return fmt.Errorf(res[1])
@@ -213,7 +215,7 @@ func Explore(c *gin.Context) {
 	res.Buckets = bs
 
 	Db.View(func(tx *bolt.Tx) (err error) {
-		b, err := getBucket(tx, bs)
+		b, err := getBucket(tx, bs, false)
 		if err != nil {
 			res.Result = "Bucket not found"
 			return fmt.Errorf(res.Result)
@@ -260,7 +262,7 @@ func Explore(c *gin.Context) {
 }
 
 // getBucket - Traverse trough the given buckets to deepest one
-func getBucket(tx *bolt.Tx, bs []string) (b *bolt.Bucket, err error) {
+func getBucket(tx *bolt.Tx, bs []string, create bool) (b *bolt.Bucket, err error) {
 	// Get the first bucket
 	nb, bs := bs[0], bs[1:]
 	b = tx.Bucket([]byte(nb))
@@ -276,8 +278,16 @@ func getBucket(tx *bolt.Tx, bs []string) (b *bolt.Bucket, err error) {
 
 		cb := b.Bucket([]byte(nb))
 		if cb == nil {
-			err = errors.New("Bucket not found")
-			return
+			if create {
+				cb, err = b.CreateBucketIfNotExists([]byte(nb))
+				if err != nil {
+					err = errors.New("Could not create sub bucket")
+					return
+				}
+			} else {
+				err = errors.New("Bucket not found")
+				return
+			}
 		}
 
 		b = cb
